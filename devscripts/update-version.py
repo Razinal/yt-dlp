@@ -55,7 +55,7 @@ _pkg_version = {package_version!r}
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Update the version.py file')
     parser.add_argument(
-        '-c', '--channel', default='stable',
+        '-c', '--channel', default='nightly',
         help='Select update channel (default: %(default)s)')
     parser.add_argument(
         '-r', '--origin', default='local',
