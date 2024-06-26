@@ -1,11 +1,12 @@
 name: "CodeQL"
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ 'master', 'gh-pages', 'release' ]
+    branches: [ 'master', 'gh-pages', 'release', 'updates' ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ 'master' ]
+    branches: [ 'updates' ]
   schedule:
     - cron: '59 11 * * 5'
 
