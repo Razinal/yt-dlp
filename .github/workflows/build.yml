@@ -242,7 +242,7 @@ jobs:
         uses: crazy-max/ghaction-import-gpg@v6
         with:
            gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-           passphrase: ${{ secrets.GPG_PASSPHRASE }}
+           passphrase: ${{ secrets.PASSPHRASE }}
            fingerprint: ${{ secrets.FINGERPRINT }}
            trust_level: ${{ secrets.TRUST_LEVEL }}
            git_user_signingkey: ${{ secrets.GIT_USER_SIGNINGKEY }}
@@ -252,7 +252,7 @@ jobs:
            GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
            GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
            GPG_SECRET_SUBKEY: ${{ secrets.GPG_SECRET_SUBKEY }}
-           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+           PASSPHRASE: ${{ secrets.PASSPHRASE }}
 
         if: env.GPG_SIGNING_KEY != ''
         run: |
