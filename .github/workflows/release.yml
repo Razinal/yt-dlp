@@ -232,6 +232,12 @@ jobs:
       actions: write  # For cleaning up cache
     secrets:
       GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GPG_SECRET_SUBKEY: ${{ secrets.GPG_SECRET_SUBKEY }}
+      PASSPHRASE: ${{ secrets.PASSPHRASE }}
+      TRUST_LEVEL: ${{ secrets.TRUST_LEVEL }}
+      FINGERPRINT: ${{ secrets.FINGERPRINT }}
+      GIT_USER_SIGNINGKEY: ${{ secrets.GIT_USER_SIGNINGKEY }}
 
   publish:
     needs: [prepare, build]
