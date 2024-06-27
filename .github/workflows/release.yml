@@ -8,11 +8,11 @@ on:
         type: boolean
       source:
         required: false
-        default: 'nightly'
+        default: 'yt-dlp/yt-dlp'
         type: string
       target:
         required: false
-        default: 'nightly'
+        default: 'master'
         type: string
       version:
         required: false
@@ -26,7 +26,7 @@ on:
           channel, repo, tag, or channel/repo@tag
           (default: <current_repo>)
         required: false
-        default: 'nightly'
+        default: 'yt-dlp/yt-dlp'
         type: string
       target:
         description: |
@@ -34,7 +34,7 @@ on:
           channel, tag, or channel@tag
           (default: <source> if writable else <current_repo>[@source_tag])
         required: false
-        default: 'nightly'
+        default: 'master'
         type: string
       version:
         description: |
@@ -114,7 +114,7 @@ jobs:
           }
 
           source_is_channel=0
-          [[ "${source_repo}" == 'stable' ]] && source_repo='yt-dlp/yt-dlp'
+          [[ "${source_repo}" == 'master' ]] && source_repo='yt-dlp/yt-dlp'
           if [[ -z "${source_repo}" ]]; then
             source_repo='${{ github.repository }}'
           elif [[ '${{ vars[format('{0}_archive_repo', env.source_repo)] }}' ]]; then
@@ -128,7 +128,7 @@ jobs:
           if [[ "${source_tag}" ]]; then
             resolved_source="${resolved_source}@${source_tag}"
           elif [[ "${source_repo}" == 'yt-dlp/yt-dlp' ]]; then
-            resolved_source='stable'
+            resolved_source='master'
           fi
 
           revision="${{ (inputs.prerelease || !vars.PUSH_VERSION_COMMIT) && '$(date -u +"%H%M%S")' || '' }}"
@@ -216,7 +216,7 @@ jobs:
         env:
           target_repo: ${{ steps.setup_variables.outputs.target_repo }}
         if: |
-          vars.PUSH_VERSION_COMMIT != '' && !inputs.prerelease && env.target_repo == github.repository
+          !vars.PUSH_VERSION_COMMIT && inputs.prerelease && env.target_repo == github.repository
         run: git push origin ${{ github.event.ref }}
 
   build:
@@ -232,56 +232,6 @@ jobs:
       actions: write  # For cleaning up cache
     secrets:
       GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-
-  publish_pypi:
-    needs: [prepare, build]
-    if: ${{ needs.prepare.outputs.pypi_project }}
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write  # mandatory for trusted publishing
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install Requirements
-        run: |
-          sudo apt -y install pandoc man
-          python devscripts/install_deps.py -o --include build
-
-      - name: Prepare
-        env:
-          version: ${{ needs.prepare.outputs.version }}
-          suffix: ${{ needs.prepare.outputs.pypi_suffix }}
-          channel: ${{ needs.prepare.outputs.channel }}
-          target_repo: ${{ needs.prepare.outputs.target_repo }}
-          pypi_project: ${{ needs.prepare.outputs.pypi_project }}
-        run: |
-          python devscripts/update-version.py -c "${{ env.channel }}" -r "${{ env.target_repo }}" -s "${{ env.suffix }}" "${{ env.version }}"
-          python devscripts/update_changelog.py -vv
-          python devscripts/make_lazy_extractors.py
-          sed -i -E '0,/(name = ")[^"]+(")/s//\1${{ env.pypi_project }}\2/' pyproject.toml
-
-      - name: Build
-        run: |
-          rm -rf dist/*
-          make pypi-files
-          printf '%s\n\n' \
-            'Official repository: <https://github.com/yt-dlp/yt-dlp>' \
-            '**PS**: Some links in this document will not work since this is a copy of the README.md from Github' > ./README.md.new
-          cat ./README.md >> ./README.md.new && mv -f ./README.md.new ./README.md
-          python devscripts/set-variant.py pip -M "You installed yt-dlp with pip or using the wheel from PyPi; Use that to update"
-          make clean-cache
-          python -m build --no-isolation .
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          verbose: true
 
   publish:
     needs: [prepare, build]
