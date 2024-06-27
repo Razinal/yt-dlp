@@ -159,18 +159,7 @@ jobs:
         run: |
           python -m bundle.pyinstaller
           python -m bundle.pyinstaller --onedir
-          Move-Item ./dist/yt-dlp.exe ./dist/yt-dlp_real.exe
           Compress-Archive -Path ./dist/yt-dlp/* -DestinationPath ./dist/yt-dlp_win.zip
-
-      - name: Install Requirements (py2exe)
-        run: |
-          python devscripts/install_deps.py --include py2exe
-
-      - name: Build (py2exe)
-        run: |
-          python -m bundle.py2exe
-          Move-Item ./dist/yt-dlp.exe ./dist/yt-dlp_min.exe
-          Move-Item ./dist/yt-dlp_real.exe ./dist/yt-dlp.exe
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -178,7 +167,6 @@ jobs:
           name: build-bin-${{ github.job }}
           path: |
             dist/yt-dlp.exe
-            dist/yt-dlp_min.exe
             dist/yt-dlp_win.zip
           compression-level: 0
 
