@@ -24,23 +24,23 @@ on:
         type: string
       gpg_private_key:
         required: false
-        default: ${{ secrets.GPG_PRIVATE_KEY }}
+        default: ''
         type: string
       passphrase:
         required: false
-        default: ${{ secrets.PASSPHRASE }}
+        default: ''
         type: string
       trust_level:
         required: false
-        default: ${{ secrets.TRUST_LEVEL }}
+        default: ''
         type: string
       git_user_signingkey:
         required: false
-        default: ${{ secrets.GIT_USER_SIGNINGKEY }}
+        default: ''
         type: boolean
       fingerprint:
         required: false
-        default: ${{ secrets.FINGERPRINT }}
+        default: ''
         type: string
     secrets:
       GPG_SIGNING_KEY:
