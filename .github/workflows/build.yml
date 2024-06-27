@@ -7,7 +7,7 @@ on:
         type: string
       channel:
         required: true
-        default: nightly
+        default: master
         type: string
       unix:
         default: true
@@ -16,9 +16,6 @@ on:
         default: true
         type: boolean
       windows:
-        default: true
-        type: boolean
-      windows32:
         default: true
         type: boolean
       origin:
@@ -40,7 +37,7 @@ on:
         description: |
           SOURCE of this build's updates: stable/nightly/master/<repo>
         required: true
-        default: nightly
+        default: master
         type: string
       unix:
         description: yt-dlp, yt-dlp.tar.gz
@@ -52,10 +49,6 @@ on:
         type: boolean
       windows:
         description: yt-dlp.exe, yt-dlp_min.exe, yt-dlp_win.zip
-        default: true
-        type: boolean
-      windows32:
-        description: yt-dlp_x86.exe
         default: true
         type: boolean
       origin:
@@ -79,7 +72,6 @@ jobs:
         id: process_origin
         run: |
           echo "origin=${{ inputs.origin == 'current repo' && github.repository || inputs.origin }}" | tee "$GITHUB_OUTPUT"
-
   unix:
     needs: process
     if: inputs.unix
@@ -91,26 +83,21 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Install Requirements
         run: |
           sudo apt -y install zip pandoc man sed
+
       - name: Prepare
         run: |
           python devscripts/update-version.py -c "${{ inputs.channel }}" -r "${{ needs.process.outputs.origin }}" "${{ inputs.version }}"
           python devscripts/update_changelog.py -vv
           python devscripts/make_lazy_extractors.py
+
       - name: Build Unix platform-independent binary
         run: |
           make all tar
-      - name: Verify --update-to
-        if: vars.UPDATE_TO_VERIFICATION
-        run: |
-          chmod +x ./yt-dlp
-          cp ./yt-dlp ./yt-dlp_downgraded
-          version="$(./yt-dlp --version)"
-          ./yt-dlp_downgraded -v --update-to yt-dlp/yt-dlp@2023.03.04
-          downgraded_version="$(./yt-dlp_downgraded --version)"
-          [[ "$version" != "$downgraded_version" ]]
+ 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -126,6 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Build static executable
         env:
           channel: ${{ inputs.channel }}
@@ -136,15 +124,7 @@ jobs:
           cd bundle/docker
           docker compose up --build static
           sudo chown "${USER}:docker" ~/build/yt-dlp_linux
-      - name: Verify --update-to
-        if: vars.UPDATE_TO_VERIFICATION
-        run: |
-          chmod +x ~/build/yt-dlp_linux
-          cp ~/build/yt-dlp_linux ~/build/yt-dlp_linux_downgraded
-          version="$(~/build/yt-dlp_linux --version)"
-          ~/build/yt-dlp_linux_downgraded -v --update-to yt-dlp/yt-dlp@2023.03.04
-          downgraded_version="$(~/build/yt-dlp_linux_downgraded --version)"
-          [[ "$version" != "$downgraded_version" ]]
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -163,6 +143,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: # 3.8 is used for Win7 support
           python-version: "3.12"
+
       - name: Install Requirements
         run: | # Custom pyinstaller built with https://github.com/yt-dlp/pyinstaller-builds
           python devscripts/install_deps.py -o --include build
@@ -173,6 +154,7 @@ jobs:
         run: |
           python devscripts/update-version.py -c "${{ inputs.channel }}" -r "${{ needs.process.outputs.origin }}" "${{ inputs.version }}"
           python devscripts/make_lazy_extractors.py
+
       - name: Build
         run: |
           python -m bundle.pyinstaller
@@ -183,24 +165,12 @@ jobs:
       - name: Install Requirements (py2exe)
         run: |
           python devscripts/install_deps.py --include py2exe
+
       - name: Build (py2exe)
         run: |
           python -m bundle.py2exe
           Move-Item ./dist/yt-dlp.exe ./dist/yt-dlp_min.exe
           Move-Item ./dist/yt-dlp_real.exe ./dist/yt-dlp.exe
-
-      - name: Verify --update-to
-        if: vars.UPDATE_TO_VERIFICATION
-        run: |
-          foreach ($name in @("yt-dlp","yt-dlp_min")) {
-            Copy-Item "./dist/${name}.exe" "./dist/${name}_downgraded.exe"
-            $version = & "./dist/${name}.exe" --version
-            & "./dist/${name}_downgraded.exe" -v --update-to yt-dlp/yt-dlp@2023.03.04
-            $downgraded_version = & "./dist/${name}_downgraded.exe" --version
-            if ($version -eq $downgraded_version) {
-              exit 1
-            }
-          }
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -212,52 +182,6 @@ jobs:
             dist/yt-dlp_win.zip
           compression-level: 0
 
-  windows32:
-    needs: process
-    if: inputs.windows32
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          architecture: "x86"
-      - name: Install Requirements
-        run: |
-          python devscripts/install_deps.py -o --include build
-          python devscripts/install_deps.py
-          python -m pip install -U "https://yt-dlp.github.io/Pyinstaller-Builds/i686/pyinstaller-6.7.0-py3-none-any.whl"
-
-      - name: Prepare
-        run: |
-          python devscripts/update-version.py -c "${{ inputs.channel }}" -r "${{ needs.process.outputs.origin }}" "${{ inputs.version }}"
-          python devscripts/make_lazy_extractors.py
-      - name: Build
-        run: |
-          python -m bundle.pyinstaller
-
-      - name: Verify --update-to
-        if: vars.UPDATE_TO_VERIFICATION
-        run: |
-          foreach ($name in @("yt-dlp_x86")) {
-            Copy-Item "./dist/${name}.exe" "./dist/${name}_downgraded.exe"
-            $version = & "./dist/${name}.exe" --version
-            & "./dist/${name}_downgraded.exe" -v --update-to yt-dlp/yt-dlp@2023.03.04
-            $downgraded_version = & "./dist/${name}_downgraded.exe" --version
-            if ($version -eq $downgraded_version) {
-              exit 1
-            }
-          }
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-bin-${{ github.job }}
-          path: |
-            dist/yt-dlp_x86.exe
-          compression-level: 0
-
   meta_files:
     if: always() && !cancelled()
     needs:
@@ -265,7 +189,7 @@ jobs:
       - unix
       - linux_static
       - windows
-      - windows32
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
