@@ -8,11 +8,11 @@ on:
         type: boolean
       source:
         required: false
-        default: 'yt-dlp/yt-dlp'
+        default: ''
         type: string
       target:
         required: false
-        default: 'master'
+        default: ''
         type: string
       version:
         required: false
@@ -26,7 +26,7 @@ on:
           channel, repo, tag, or channel/repo@tag
           (default: <current_repo>)
         required: false
-        default: 'yt-dlp/yt-dlp'
+        default: ''
         type: string
       target:
         description: |
@@ -34,7 +34,7 @@ on:
           channel, tag, or channel@tag
           (default: <source> if writable else <current_repo>[@source_tag])
         required: false
-        default: 'master'
+        default: ''
         type: string
       version:
         description: |
