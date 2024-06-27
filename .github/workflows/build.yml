@@ -24,23 +24,23 @@ on:
         type: string
       gpg_private_key:
         required: false
-        default: '${{ secrets.GPG_PRIVATE_KEY }}'
+        default: ${{ secrets.GPG_PRIVATE_KEY }}
         type: string
       passphrase:
         required: false
-        default: '${{ secrets.PASSPHRASE }}'
+        default: ${{ secrets.PASSPHRASE }}
         type: string
       trust_level:
         required: false
-        default: '${{ secrets.TRUST_LEVEL }}'
+        default: ${{ secrets.TRUST_LEVEL }}
         type: string
       git_user_signingkey:
         required: false
-        default: '${{ secrets.GIT_USER_SIGNINGKEY }}'
+        default: ${{ secrets.GIT_USER_SIGNINGKEY }}
         type: boolean
       fingerprint:
         required: false
-        default: '${{ secrets.FINGERPRINT }}'
+        default: ${{ secrets.FINGERPRINT }}
         type: string
     secrets:
       GPG_SIGNING_KEY:
@@ -50,6 +50,12 @@ on:
       GPG_SECRET_SUBKEY:
         required: false
       PASSPHRASE:
+        required: false
+      TRUST_LEVEL:
+        required: false
+      GIT_USER_SIGNINGKEY:
+        required: false
+      FINGERPRINT:
         required: false
 
   workflow_dispatch:
@@ -80,10 +86,10 @@ on:
       origin:
         description: Origin
         required: false
-        default: 'current repo'
+        default: 'yt-dlp/yt-dlp'
         type: choice
         options:
-        - 'current repo'
+        - 'yt-dlp/yt-dlp'
 
 permissions:
   contents: read
@@ -97,7 +103,7 @@ jobs:
       - name: Process origin
         id: process_origin
         run: |
-          echo "origin=${{ inputs.origin == 'current repo' && github.repository || inputs.origin }}" | tee "$GITHUB_OUTPUT"
+          echo "origin=${{ inputs.origin == 'yt-dlp/yt-dlp' && github.repository || inputs.origin }}" | tee "$GITHUB_OUTPUT"
   unix:
     needs: process
     if: inputs.unix
