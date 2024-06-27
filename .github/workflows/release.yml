@@ -45,7 +45,7 @@ on:
         type: string
       prerelease:
         description: Pre-release
-        default: false
+        default: true
         type: boolean
 
 permissions:
@@ -114,7 +114,7 @@ jobs:
           }
 
           source_is_channel=0
-          [[ "${source_repo}" == 'nightly' ]] && source_repo='yt-dlp/yt-dlp'
+          [[ "${source_repo}" == 'stable' ]] && source_repo='yt-dlp/yt-dlp'
           if [[ -z "${source_repo}" ]]; then
             source_repo='${{ github.repository }}'
           elif [[ '${{ vars[format('{0}_archive_repo', env.source_repo)] }}' ]]; then
@@ -128,7 +128,7 @@ jobs:
           if [[ "${source_tag}" ]]; then
             resolved_source="${resolved_source}@${source_tag}"
           elif [[ "${source_repo}" == 'yt-dlp/yt-dlp' ]]; then
-            resolved_source='nightly'
+            resolved_source='stable'
           fi
 
           revision="${{ (inputs.prerelease || !vars.PUSH_VERSION_COMMIT) && '$(date -u +"%H%M%S")' || '' }}"
@@ -187,7 +187,7 @@ jobs:
           version: ${{ steps.setup_variables.outputs.version }}
           target_repo: ${{ steps.setup_variables.outputs.target_repo }}
         if: |
-          !inputs.prerelease && env.target_repo == github.repository
+          inputs.prerelease && env.target_repo == github.repository
         run: |
           python devscripts/update_changelog.py -vv
           make doc
@@ -198,7 +198,7 @@ jobs:
           version: ${{ steps.setup_variables.outputs.version }}
           target_repo: ${{ steps.setup_variables.outputs.target_repo }}
         if: |
-          !inputs.prerelease && env.target_repo == github.repository
+          inputs.prerelease && env.target_repo == github.repository
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
