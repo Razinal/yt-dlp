@@ -36,7 +36,7 @@ on:
         type: string
       git_user_signingkey:
         required: false
-        default: ''
+        default: true
         type: boolean
       fingerprint:
         required: false
