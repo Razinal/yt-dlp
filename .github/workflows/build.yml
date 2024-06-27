@@ -19,8 +19,28 @@ on:
         default: true
         type: boolean
       origin:
+        required: true
+        default: 'yt-dlp/yt-dlp'
+        type: string
+      gpg_private_key:
         required: false
-        default: ''
+        default: '${{ secrets.GPG_PRIVATE_KEY }}'
+        type: string
+      passphrase:
+        required: false
+        default: '${{ secrets.GPG_PASSPHRASE }}'
+        type: string
+      trust_level:
+        required: false
+        default: '${{ secrets.TRUST_LEVEL }}'
+        type: string
+      git_user_signingkey:
+        required: false
+        default: '${{ secrets.GIT_USER_SIGNINGKEY }}'
+        type: boolean
+      fingerprint:
+        required: false
+        default: '${{ secrets.FINGERPRINT }}'
         type: string
     secrets:
       GPG_SIGNING_KEY:
@@ -223,9 +243,9 @@ jobs:
         with:
            gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
            passphrase: ${{ secrets.GPG_PASSPHRASE }}
-           fingerprint: "30645638761BF647173AA92619A0A403DDF0C748"
-           trust_level: 5
-           git_user_signingkey: true
+           fingerprint: ${{ secrets.FINGERPRINT }}
+           trust_level: ${{ secrets.TRUST_LEVEL }}
+           git_user_signingkey: ${{ secrets.GIT_USER_SIGNINGKEY }}
 
       - name: Sign checksum files
         env:
