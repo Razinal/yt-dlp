@@ -23,8 +23,9 @@ on:
         default: ''
         type: string
     secrets:
-      GPG_SIGNING_KEY:
-        required: false
+      GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
   workflow_dispatch:
     inputs:
@@ -209,12 +210,25 @@ jobs:
           lockV2 yt-dlp/yt-dlp-master-builds 2023.11.15.232812 win_x86_exe .+ Windows-(?:Vista|2008Server)
           EOF
 
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v1
+        env:
+           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+           GPG_SECRET_SUBKEY: ${{ secrets.GPG_SECRET_SUBKEY }}
+           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
       - name: Sign checksum files
         env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+           GPG_SECRET_SUBKEY: ${{ secrets.GPG_SECRET_SUBKEY }}
+           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         if: env.GPG_SIGNING_KEY != ''
         run: |
           gpg --batch --import <<< "${{ secrets.GPG_SIGNING_KEY }}"
+          gpg --batch --import <<< "${{ secrets.GPG_PRIVATE_KEY }}"
+          gpg --batch --import <<< "${{ secrets.GPG_SECRET_SUBKEY }}"
           for signfile in ./SHA*SUMS; do
             gpg --batch --detach-sign "$signfile"
           done
