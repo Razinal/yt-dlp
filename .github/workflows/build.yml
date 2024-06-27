@@ -48,7 +48,7 @@ on:
         default: true
         type: boolean
       windows:
-        description: yt-dlp.exe, yt-dlp_min.exe, yt-dlp_win.zip
+        description: yt-dlp.exe, yt-dlp_win.zip
         default: true
         type: boolean
       origin:
