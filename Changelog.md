@@ -4,6 +4,11 @@
 # To create a release, dispatch the https://github.com/yt-dlp/yt-dlp/actions/workflows/release.yml workflow on master
 -->
 
+### 2024.06.27.031251
+
+#### Core changes
+- [Merge pull request #3 from Razinal/updates](https://github.com/yt-dlp/yt-dlp/commit/d94776f369ab56c26395b44f67bf923448434109) by [pukkandan](https://github.com/pukkandan)
+
 ### 2024.06.27.030152
 
 #### Core changes
