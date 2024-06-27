@@ -28,7 +28,7 @@ on:
         type: string
       passphrase:
         required: false
-        default: '${{ secrets.GPG_PASSPHRASE }}'
+        default: '${{ secrets.PASSPHRASE }}'
         type: string
       trust_level:
         required: false
