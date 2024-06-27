@@ -301,7 +301,7 @@ If you fork the project on GitHub, you can run your fork's [build workflow](.git
     --no-update                     Do not check for updates (default)
     --update-to [CHANNEL]@[TAG]     Upgrade/downgrade to a specific version.
                                     CHANNEL can be a repository as well. CHANNEL
-                                    and TAG default to "stable" and "latest"
+                                    and TAG default to "master" and "latest"
                                     respectively if omitted; See "UPDATE" for
                                     details. Supported channels: stable,
                                     nightly, master
