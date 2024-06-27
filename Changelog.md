@@ -4,6 +4,16 @@
 # To create a release, dispatch the https://github.com/yt-dlp/yt-dlp/actions/workflows/release.yml workflow on master
 -->
 
+### 2024.06.27.055537
+
+#### Core changes
+- [Merge pull request #4 from Razinal/master](https://github.com/yt-dlp/yt-dlp/commit/111cdf610850e2aaeefb10a66f8901b11f4f266d) by [pukkandan](https://github.com/pukkandan)
+- [Merge pull request #5 from Razinal/updates](https://github.com/yt-dlp/yt-dlp/commit/b98eb15cd19aa2cd6196332514dc686ec5e761c1) by [pukkandan](https://github.com/pukkandan)
+- [Merge pull request #6 from Razinal/updates](https://github.com/yt-dlp/yt-dlp/commit/f1193ddb1ed400827ec8bb4969b92cfc109d6096) by [pukkandan](https://github.com/pukkandan)
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/8d6453fbea6ba0ae8205f618df9bcde04a78828f) by [pukkandan](https://github.com/pukkandan)
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/402ce4e227d1220674aab0346cdafc7cb4dc0ffc) by [pukkandan](https://github.com/pukkandan)
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/5751657afeefbdb2388ff999a4d4c2a6b160519d) by [pukkandan](https://github.com/pukkandan)
+
 ### 2024.06.27.031251
 
 #### Core changes
