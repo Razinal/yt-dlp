@@ -6,7 +6,6 @@ permissions:
 jobs:
   quick:
     name: Quick Download Tests
-    if: "contains(github.event.head_commit.message, 'ci run dl')"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +21,6 @@ jobs:
 
   full:
     name: Full Download Tests
-    if: "contains(github.event.head_commit.message, 'ci run dl all')"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
