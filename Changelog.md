@@ -4,6 +4,17 @@
 # To create a release, dispatch the https://github.com/yt-dlp/yt-dlp/actions/workflows/release.yml workflow on master
 -->
 
+### 2024.06.27.064310
+
+#### Core changes
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/356ab7ebd0568a5c02fc4b90afb0b8af4ec287d4) by [pukkandan](https://github.com/pukkandan)
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/87ac1cb044e3dfedfea3a742a1b53a2e996cbea1) by [pukkandan](https://github.com/pukkandan)
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/fbd65cc0ddb29ab4ef9bce8151cda83c26cc21b5) by [pukkandan](https://github.com/pukkandan)
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/4eff4c5d2692a870dc31eec37be6cbea1636fa12) by [pukkandan](https://github.com/pukkandan)
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/887227b307bffe9c854d9e18c17f2d5f1b1f9764) by [pukkandan](https://github.com/pukkandan)
+- [Update build.yml](https://github.com/yt-dlp/yt-dlp/commit/7631b61a74f611fa34b62d309d733ce5e1ceae84) by [pukkandan](https://github.com/pukkandan)
+- [Update release.yml](https://github.com/yt-dlp/yt-dlp/commit/c200faa443f91b3bf11589127fd40af1b238b822) by [pukkandan](https://github.com/pukkandan)
+
 ### 2024.06.27.055537
 
 #### Core changes
